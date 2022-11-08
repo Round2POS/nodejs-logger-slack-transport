@@ -5,5 +5,7 @@ do
     then
         curl -X POST --silent --data-urlencode \
             "payload={\"text\": \"$(echo $LINE | sed "s/\"/'/g")\"}" $SLACK_WEBHOOK_URL
+        
+        echo $LINE
     fi
 done < "${1:-/dev/stdin}"
