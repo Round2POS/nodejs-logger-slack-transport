@@ -1,24 +1,9 @@
 #! /bin/bash
-
-while read line
+while read LINE
 do
-    if [ ! -z "${line-}" ]
+    if [ ! -z "${LINE-}" ]
     then
-        BASE_JSON='{
-            "text": "Log Entry",
-            "blocks": [
-                {
-                    "type": "section",
-                    "text": {
-                        "type": "mrkdwn",
-                        "text": "```%s```"
-                    }
-                }
-            ]
-        }'
-        
-        FMT_JSON=$(printf "$BASE_JSON" "$line")
-
-        curl -s -X POST $SLACK_WEBHOOK_URL -H "Content-type:application/json" -d "$FMT_JSON" > /dev/null
+        curl -X POST --silent --data-urlencode \
+            "payload={\"text\": \"$(echo $LINE | sed "s/\"/'/g")\"}" $SLACK_WEBHOOK_URL
     fi
 done < "${1:-/dev/stdin}"
